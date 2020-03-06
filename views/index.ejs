@@ -9,7 +9,8 @@
     <h1 class="header"><%= title %></h1>
     <p class="header">Select your options and enter your MDF from the options below</p>
     <div id="btnConstruct" class="header">
-      <button onclick="process()">Test</button>
+      <button onclick="importMap()">Import Map</button>
+      <button onclick="exportMap()">Export Map</button>
       <button id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
     </div>
     <p id="prompt" class="header">Enter MDF Strings below to validate</p>
@@ -28,6 +29,21 @@
       obstacleMode = false;
       selectorGrid = new Array(300).fill(0);
       submittedGrid = new Array(300).fill(-1);
+
+      function importMap() {
+
+      }
+
+      function exportMap() {
+        var textToSave = selectorGrid.toString().replace(/,/g, "").replace(/(.{15})/g,"$1\n");
+
+        var hiddenElement = document.createElement('a');
+
+        hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'sampleArena.txt';
+        hiddenElement.click();
+      }
 
       function initialize() {
         console.log("Initializing");
