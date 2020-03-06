@@ -1,6 +1,6 @@
 body {
   /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
-  font: 14px "Google Sans", sans-serif;
+  font: 15px "Google Sans", sans-serif;
   background-color: grey;
 }
 
@@ -9,7 +9,7 @@ button {
   font-weight: 500;
 }
 
-div, h1, p {
+div, h1, h3, p {
   color: white;
 }
 
@@ -56,8 +56,8 @@ div.incorrect {
 .tblong {
   width: 50%;
   padding: 5px;
-  margin-top: 4px;
-  margin-bottom: 4px;
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .disabled {

@@ -3,14 +3,24 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link href="https://fonts.googleapis.com/css?family=Product+Sans&display=swap" rel="stylesheet">
+
+    <!-- Google Product Sans -->
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans&display=swap" rel="stylesheet">
+
+    <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+    
+    <!-- Material Design -->
+    <!-- Compiled and minified CSS -->
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
+    <!-- Compiled and minified JavaScript -->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
   </head>
   <body onload="initialize()">
     <h1 class="header"><%= title %></h1>
     <p class="header">Select your options and enter your MDF from the options below. Left map is sample map, Right map is MDF map</p>
     <div id="btnConstruct" class="header">
-      <button onclick="importMap()">Import Map</button>
+      <button class="mdc-button" onclick="importMap()">Import Map</button>
       <button onclick="exportMap()">Export Map</button>
       <button id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
     </div>
