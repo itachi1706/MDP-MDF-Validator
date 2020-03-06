@@ -112,7 +112,7 @@
 
       function drawSubmittedGrid() {
         console.log("Generating Submission Grid");
-        let i=0;
+        console.log("Submission Grid Length:", submittedGrid.length);
         let table = $("#submittedArena");
         table.html("");
         submittedGrid.forEach((element, i) => {
@@ -141,10 +141,17 @@
 
       var mdfHex = /[0-9A-Fa-f]+/g;
 
-      function hex2bin(hex){
-        ans = parseInt(hex, 16);
-        console.log(ans);
-        return !isNaN(ans);
+      function isHex(hex){
+        try {
+          ans = BigInt("0x" + hex);
+        } catch (err) {
+          if (err.name == "SyntaxError") return false;
+          else {
+            console.log(err);
+            return false;
+          }
+        }
+        return true;
       }
 
       function validateMDF() {
@@ -158,8 +165,8 @@
           return;
         }
         // Check MDF Hex
-        if (!hex2bin(mdf1)) { alert('MDF 1 is not a valid hexadecimal string'); return; } 
-        else if (!hex2bin(mdf2)) { alert('MDF 2 is not a valid hexadecimal string'); return; } 
+        if (!isHex(mdf1)) { alert('MDF 1 is not a valid hexadecimal string'); return; } 
+        else if (!isHex(mdf2)) { alert('MDF 2 is not a valid hexadecimal string'); return; } 
         else console.log("Validation Successful, Checking");
         
         let xhr = new XMLHttpRequest();
@@ -168,6 +175,15 @@
         xhr.send(`mdf1=${mdf1}&mdf2=${mdf2}`);
         xhr.onload = function() {
           console.log(`Loaded: ${xhr.status} ${xhr.response}`);
+          console.log(xhr.response);
+          console.log(typeof(xhr.response));
+          if (xhr.status == 200) {
+            console.log(submittedGrid.length);
+            submittedGrid = xhr.response.split(',').map(Number);
+            console.log(submittedGrid.length);
+            console.log(submittedGrid);
+            drawSubmittedGrid();
+          }
         };
 
         xhr.onerror = function() { // only triggers if the request couldn't be made at all
