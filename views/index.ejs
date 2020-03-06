@@ -7,7 +7,7 @@
   </head>
   <body onload="initialize()">
     <h1 class="header"><%= title %></h1>
-    <p class="header">Select your options and enter your MDF from the options below</p>
+    <p class="header">Select your options and enter your MDF from the options below. Left map is sample map, Right map is MDF map</p>
     <div id="btnConstruct" class="header">
       <button onclick="importMap()">Import Map</button>
       <button onclick="exportMap()">Export Map</button>
@@ -19,6 +19,8 @@
       <input type="text" placeholder="MDF String 2" id="mdf2" class="tblong" /><br>
       <button id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
     </div>
+
+    <div id="result" class="header">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
 
     <div class="header largetopgap">
       <div class="mdp-container" id="sampleArena"></div>
@@ -104,8 +106,8 @@
         table.html("");
         selectorGrid.forEach((element, i) => {
           switch (element) {
-            case 0: table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"></div>`); break;
-            case 1: table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"></div>`); break;
+            case 0: table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`); break;
+            case 1: table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`); break;
           }
         });
       }
@@ -117,9 +119,9 @@
         table.html("");
         submittedGrid.forEach((element, i) => {
           switch (element) {
-            case 0: table.append(`<div class="mdp-free"></div>`); break;
-            case -1: table.append(`<div class="mdp-unexplored"></div>`); break;
-            case 1: table.append(`<div class="mdp-obstacle"></div>`); break;
+            case 0: table.append(`<div id="sg-${i}" class="mdp-free"> </div>`); break;
+            case -1: table.append(`<div id="sg-${i}" class="mdp-unexplored"> </div>`); break;
+            case 1: table.append(`<div id="sg-${i}" class="mdp-obstacle"> /div>`); break;
           }
         });
       }
@@ -154,6 +156,40 @@
         return true;
       }
 
+      function calcScore() {
+        var correct = 0; // +1 score
+        var incorrect = 0; // -10 score
+        var unexplored = 0; // -2 score
+        submittedGrid.forEach(elem => {
+          if (elem == -1) unexplored++;
+        });
+        for (var i = 0; i < 300; i++) {
+          var s = submittedGrid[i];
+          var g = selectorGrid[i];
+          var o = $(`#sg-${i}`);
+          if (s == -1) continue;
+          if (s != g) {
+            incorrect++;
+            //o.html('<span class="incorrect">✗</span>');
+            o.addClass("incorrect");
+            o.text("✗");
+          }
+          else {
+            correct++;
+            //o.html('<span class="correct">✓</span>');
+            o.addClass("correct");
+            o.text("✓");
+          }
+        }
+        var score = correct - (incorrect * 10) - (unexplored * 2);
+        // Update
+        $("#resultScore").text(score);
+        $("#resultC").text(correct);
+        $("#resultI").text(incorrect);
+        $("#resultU").text(unexplored);
+        $("#result").css("visibility", "visible");
+      }
+
       function validateMDF() {
         console.log("Validating...")
         var mdf1 = $("#mdf1").val();
@@ -183,6 +219,7 @@
             console.log(submittedGrid.length);
             console.log(submittedGrid);
             drawSubmittedGrid();
+            calcScore();
           }
         };
 

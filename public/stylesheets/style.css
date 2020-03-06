@@ -1,6 +1,46 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: grey;
+}
+
+div, h1, p {
+  color: white;
+}
+
+div.correct {
+  color: green;
+  font-weight: bold;
+  font-size: unset;
+}
+
+div.incorrect {
+  color: red;
+  font-weight: bold;
+  font-size: unset;
+}
+
+#result {
+  visibility: hidden;
+}
+
+#resultScore {
+  color: aqua;
+}
+
+#resultC {
+  color: green;
+}
+
+#resultI {
+  color: red;
+}
+
+#resultU {
+  color: yellow;
+}
+
+#result {
+  font-weight: bold;
 }
 
 .header {
@@ -40,6 +80,10 @@ body {
   padding: 20px;
   font-size: 30px;
   text-align: center;
+  max-width: 1px;
+  max-height: 1px;
+  min-width: 1px;
+  min-height: 1px;
 }
 
 .mdp-obstacle {
@@ -48,6 +92,10 @@ body {
   padding: 20px;
   font-size: 30px;
   text-align: center;
+  max-width: 1px;
+  max-height: 1px;
+  min-width: 1px;
+  min-height: 1px;
 }
 
 .mdp-unexplored {
@@ -56,6 +104,10 @@ body {
   padding: 20px;
   font-size: 30px;
   text-align: center;
+  max-width: 1px;
+  max-height: 1px;
+  min-width: 1px;
+  min-height: 1px;
 }
 
 a {
