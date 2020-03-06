@@ -3,6 +3,61 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.header {
+  text-align: center;;
+}
+
+.tblong {
+  width: 50%;
+  padding: 5px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.disabled {
+  opacity: 0.6; /* Real browsers */
+  filter: alpha(opacity = 60); /* MSIE */
+}
+
+.largetopgap {
+  margin-top: 30px;
+}
+
+.padleft {
+  margin-left: 30px;
+}
+
+.mdp-container {
+  display: inline-grid;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
+  background-color:black;
+  padding: 10px;
+}
+
+.mdp-free {
+  background-color: rgba(255, 255, 255);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.mdp-obstacle {
+  background-color: rgba(0, 0, 0);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.mdp-unexplored {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
 a {
   color: #00B7FF;
 }

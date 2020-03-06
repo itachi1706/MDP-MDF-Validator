@@ -3,10 +3,129 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
   </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-    <p>Testing function call <%= increment() %></p>
+  <body onload="initialize()">
+    <h1 class="header"><%= title %></h1>
+    <p class="header">Select your options and enter your MDF from the options below</p>
+    <div id="btnConstruct" class="header">
+      <button onclick="process()">Test</button>
+      <button id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
+    </div>
+    <p id="prompt" class="header">Enter MDF Strings below to validate</p>
+    <div id="btnConstruct" class="header">
+      <input type="text" placeholder="MDF String 1" id="mdf1" class="tblong" /><br>
+      <input type="text" placeholder="MDF String 2" id="mdf2" class="tblong" /><br>
+      <button id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
+    </div>
+
+    <div class="header largetopgap">
+      <div class="mdp-container" id="sampleArena"></div>
+      <div class="mdp-container padleft" id="submittedArena"></div>
+    </div>
+    
+    <script>
+      obstacleMode = false;
+      selectorGrid = new Array(300).fill(0);
+      submittedGrid = new Array(300).fill(-1);
+
+      function initialize() {
+        console.log("Initializing");
+        drawSelectorGrid();
+        drawSubmittedGrid();
+      }
+
+      function setGrid(i) {
+        if (!obstacleMode) return;
+        console.log("Selected:", i);
+        let cell = $(`#samplegrid-${i}`);
+        if (cell.hasClass("mdp-free")) {
+          selectorGrid[i] = 1;
+          cell.removeClass("mdp-free");
+          cell.addClass("mdp-obstacle");
+        } else if (cell.hasClass("mdp-obstacle")) {
+          selectorGrid[i] = 0;
+          cell.removeClass("mdp-obstacle");
+          cell.addClass("mdp-free")
+        } else console.log("NO CLASS FOUND");
+      }
+
+      function drawSelectorGrid() {
+        console.log("Generating Default Grid");
+        let table = $("#sampleArena");
+        table.html("");
+        selectorGrid.forEach((element, i) => {
+          switch (element) {
+            case 0: table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"></div>`); break;
+            case 1: table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"></div>`); break;
+          }
+        });
+      }
+
+      function drawSubmittedGrid() {
+        console.log("Generating Submission Grid");
+        let i=0;
+        let table = $("#submittedArena");
+        table.html("");
+        submittedGrid.forEach((element, i) => {
+          switch (element) {
+            case 0: table.append(`<div class="mdp-free"></div>`); break;
+            case -1: table.append(`<div class="mdp-unexplored"></div>`); break;
+            case 1: table.append(`<div class="mdp-obstacle"></div>`); break;
+          }
+        });
+      }
+
+      function process() {
+        console.log("lol " + obstacleMode);
+      }
+
+      function toggleObstacle() {
+        obstacleMode = !obstacleMode;
+        if (obstacleMode) {
+          $("#btnObstacleSet").html("Disable Obstacle Placement Mode");
+          $("#prompt").text("Obstacle Mode Enabled, click map to set obstacle");
+        } else {
+          $("#btnObstacleSet").html("Enable Obstacle Placement Mode");
+          $("#prompt").text("Enter MDF strings below to validate");
+        }
+      }
+
+      var mdfHex = /[0-9A-Fa-f]+/g;
+
+      function hex2bin(hex){
+        ans = parseInt(hex, 16);
+        console.log(ans);
+        return !isNaN(ans);
+      }
+
+      function validateMDF() {
+        console.log("Validating...")
+        var mdf1 = $("#mdf1").val();
+        var mdf2 = $("#mdf2").val();
+        console.log("MDF 1:", mdf1, " | MDF 2:", mdf2);
+        if (!mdf1 === '' || mdf2 === '') {
+          console.log("ERROR");
+          alert("Both MDF Strings are required to validate board");
+          return;
+        }
+        // Check MDF Hex
+        if (!hex2bin(mdf1)) { alert('MDF 1 is not a valid hexadecimal string'); return; } 
+        else if (!hex2bin(mdf2)) { alert('MDF 2 is not a valid hexadecimal string'); return; } 
+        else console.log("Validation Successful, Checking");
+        
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/submitMDF');
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(`mdf1=${mdf1}&mdf2=${mdf2}`);
+        xhr.onload = function() {
+          console.log(`Loaded: ${xhr.status} ${xhr.response}`);
+        };
+
+        xhr.onerror = function() { // only triggers if the request couldn't be made at all
+          alert(`Network Error`);
+        };
+      }
+    </script>
   </body>
 </html>
