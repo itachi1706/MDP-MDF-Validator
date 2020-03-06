@@ -1,6 +1,12 @@
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
+  font: 14px "Google Sans", sans-serif;
   background-color: grey;
+}
+
+button {
+  font-family: "Google Sans", sans-serif;
+  font-weight: 500;
 }
 
 div, h1, p {
