@@ -84,9 +84,6 @@ router.post('/submitMDF', function (req, res) {
   printMapDbg(exploredMap);
 
   // bottom up invert
-  //console.log("Inverting for client");
-  //exploredMap = exploredMap.reverse();
-  //printMapDbg(exploredMap);
   exploredMap = reverse2DArr(exploredMap);
   printMapDbg(exploredMap);
   
