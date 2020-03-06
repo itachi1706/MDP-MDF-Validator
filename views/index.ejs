@@ -30,8 +30,40 @@
       selectorGrid = new Array(300).fill(0);
       submittedGrid = new Array(300).fill(-1);
 
-      function importMap() {
+      function updateMap(contents) {
+        console.log(contents);
+        contents = contents.replace(/(?:\r\n|\r|\n)/g, '');
+        console.log(contents);
+        for (var i = 0; i < contents.length; i++) {
+          selectorGrid[i] = parseInt(contents.charAt(i));
+        }
+        drawSelectorGrid();
+      }
+      function openFile(func) {
+        readFile = function(e) {
+          var file = e.target.files[0];
+          if (!file) {
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function(e) {
+            var contents = e.target.result;
+            fileInput.func(contents)
+            document.body.removeChild(fileInput)
+          }
+          reader.readAsText(file)
+        }
+        fileInput = document.createElement("input")
+        fileInput.type='file'
+        fileInput.style.display='none'
+        fileInput.onchange=readFile
+        fileInput.func=func
+        document.body.appendChild(fileInput)
+        fileInput.click();
+      }
 
+      function importMap() {
+        openFile(updateMap);
       }
 
       function exportMap() {
