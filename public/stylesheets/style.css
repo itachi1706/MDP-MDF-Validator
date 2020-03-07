@@ -1,7 +1,7 @@
 body {
   /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
-  font: 15px "Google Sans", sans-serif;
-  background-color: grey;
+  font: 20px "Google Sans", sans-serif;
+  background-color: #696969;
 }
 
 button {
@@ -9,7 +9,16 @@ button {
   font-weight: 500;
 }
 
-div, h1, h3, p {
+table {
+  display: block;
+  width: 100%;
+}
+
+td {
+  align-content: center;
+}
+
+div, h1, h2, h3, h4, h5, h6, p {
   color: white;
 }
 
@@ -118,4 +127,42 @@ div.incorrect {
 
 a {
   color: #00B7FF;
+}
+
+.mdf-input {
+  width: 80%;
+  margin: auto;
+}
+
+.mdf-input-div {
+  text-align: center;
+}
+
+/* Materialize Changes */
+input, label {
+  color: #fff;
+}
+
+.input-field .helper-text {
+  font-size: 14px !important;
+  font-weight: 500;
+}
+
+.input-field .helper-text:after .invalid {
+  color: aqua !important;
+}
+
+/* label color */
+.input-field label {
+  color: #fff !important;
+}
+
+ /* label focus color */
+ .input-field input[type=text]:focus + label {
+  color: #fff !important;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #fff !important;
+  box-shadow: 0 1px 0 0 #fff !important;
 }

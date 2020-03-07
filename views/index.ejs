@@ -12,9 +12,9 @@
     
     <!-- Material Design -->
     <!-- Compiled and minified CSS -->
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
-    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   </head>
   <body onload="initialize()">
     <h1 class="header"><%= title %></h1>
@@ -25,17 +25,36 @@
       <button id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
     </div>
     <p id="prompt" class="header">Enter MDF Strings below to validate</p>
-    <div id="btnConstruct" class="header">
-      <input type="text" placeholder="MDF String 1" id="mdf1" class="tblong" /><br>
-      <input type="text" placeholder="MDF String 2" id="mdf2" class="tblong" /><br>
+    <div id="btnConstruct" class="header mdf-input-div">
+      <div class="input-field col s6 mdf-input">
+        <input id="mdf1" type="text" class="validate">
+        <label for="mdf1">MDF String 1</label>
+        <span class="helper-text" id="helper-mdf1" data-error="Invalid"></span>
+      </div>
+      <div class="input-field col s12 mdf-input">
+        <input id="mdf2" type="text" class="validate">
+        <label for="mdf2">MDF String 2</label>
+        <span class="helper-text" id="helper-mdf2" data-error="Invalid"></span>
+      </div>
       <button id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
     </div>
 
     <div id="result" class="header">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
 
-    <div class="header largetopgap">
-      <div class="mdp-container" id="sampleArena"></div>
-      <div class="mdp-container padleft" id="submittedArena"></div>
+    <div class="largetopgap">
+      <table>
+        <tbody>
+          <tr>
+            <td style="float: right;">
+              <div class="mdp-container" id="sampleArena"></div>
+            </td>
+            <td>
+              <div class="mdp-container" id="submittedArena"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
     </div>
     
     <script>
@@ -205,15 +224,31 @@
         console.log("Validating...")
         var mdf1 = $("#mdf1").val();
         var mdf2 = $("#mdf2").val();
+        $("#mdf1").removeClass("invalid");
+        $("#mdf2").removeClass("invalid");
         console.log("MDF 1:", mdf1, " | MDF 2:", mdf2);
-        if (!mdf1 === '' || mdf2 === '') {
+        if (mdf1 === '') {
           console.log("ERROR");
-          alert("Both MDF Strings are required to validate board");
+          $("#mdf1").addClass("invalid");
+          $("#helper-mdf1").attr("data-error", "Exploration MDF String not found");
+          return;
+        } else if (mdf2 === '') {
+          console.log("ERROR");
+          $("#mdf2").addClass("invalid");
+          $("#helper-mdf2").attr("data-error", "Obstacle MDF String not found");
           return;
         }
         // Check MDF Hex
-        if (!isHex(mdf1)) { alert('MDF 1 is not a valid hexadecimal string'); return; } 
-        else if (!isHex(mdf2)) { alert('MDF 2 is not a valid hexadecimal string'); return; } 
+        if (!isHex(mdf1)) { 
+          $("#mdf1").addClass("invalid");
+          $("#helper-mdf1").attr("data-error", "Invalid Hexadecimal String");
+          return; 
+        } 
+        else if (!isHex(mdf2)) { 
+          $("#mdf2").addClass("invalid");
+          $("#helper-mdf2").attr("data-error", "Invalid Hexadecimal String");
+          return; 
+        } 
         else console.log("Validation Successful, Checking");
         
         let xhr = new XMLHttpRequest();
