@@ -261,6 +261,7 @@
           return; 
         } 
         else console.log("Validation Successful, Checking");
+        M.toast({html: 'Validating MDF String...', displayLength: 2000});
         
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/submitMDF');

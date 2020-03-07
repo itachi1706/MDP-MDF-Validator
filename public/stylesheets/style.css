@@ -1,7 +1,7 @@
 body {
   /* font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; */
   font: 20px "Google Sans", sans-serif;
-  background-color: #696969;
+  background-color: #101010;
 }
 
 button {
@@ -85,7 +85,7 @@ div.incorrect {
 .mdp-container {
   display: inline-grid;
   grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
-  background-color:black;
+  background-color: gold;
   padding: 10px;
 }
 
