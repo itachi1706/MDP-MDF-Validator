@@ -23,7 +23,9 @@ function reverse2DArr(arr) {
   return reversed;
 }
 
-function printMapDbg(arr) {
+const DEBUG = false;
+function printMapDbg(arr, override = false) {
+  if (!DEBUG && !override) return;
   console.log("=======================================");
   for (var i = 0; i < 15; i++) {
     s = "";
@@ -45,15 +47,14 @@ router.post('/submitMDF', function (req, res) {
 
   var exploredLen = replaceAll(m1, "0", "").length;
   var obstaclePad = exploredLen % 4;
-  console.log("Explored Length:", exploredLen, ", Obstacle Padding:", obstaclePad);
+  console.log("Explored Length:", exploredLen, "| Obstacle Padding:", obstaclePad);
 
   var m2s = req.body.mdf2;
   console.log("Obstacle MDF Hex Len:", m2s.length);
   var m2 = hex2bin(req.body.mdf2);
   var mdfHexToBin = m2s.length * 4;
   m2 = "0".repeat(mdfHexToBin - m2.length) + m2;
-  console.log("Obstacle MDF:", m2);
-  console.log("Obstacle MDF Len:", m2.length);
+  console.log("Obstacle MDF:", m2, "| Obstacle MDF Len:", m2.length);
 
   console.log("Parsing Explored MDF");
   const MAPCOL = 15;
@@ -84,10 +85,11 @@ router.post('/submitMDF', function (req, res) {
   printMapDbg(exploredMap);
 
   // bottom up invert
+  console.log("Reversing Array to send back to client")
   exploredMap = reverse2DArr(exploredMap);
-  printMapDbg(exploredMap);
+  printMapDbg(exploredMap, true);
   
-  console.log(exploredMap.length * exploredMap[0].length);
+  console.log("Concatanting array into string. Len:", exploredMap.length * exploredMap[0].length);
   var send = "";
   for (var i = 0; i < MAPROW; i++) {
     for (var j = 0; j < MAPCOL; j++) {
