@@ -34,7 +34,7 @@ div.incorrect {
   font-size: unset;
 }
 
-#result.no-result {
+.hide-elem {
   display: none;
 }
 
@@ -165,4 +165,22 @@ input, label {
 .input-field input[type=text]:focus {
   border-bottom: 1px solid #fff !important;
   box-shadow: 0 1px 0 0 #fff !important;
+}
+
+/* FAB Tooltip */
+.fixed-action-btn ul > li > span {
+  position: absolute;
+  right: 120%;
+  white-space: nowrap;
+  background: rgba(0,0,0,.6);
+  padding: 3px 9px;
+  color: white;
+  margin-top: 12px;
+}
+
+/* change colour of filled in check box */
+.checkbox-blue[type="checkbox"].filled-in:checked + span:not(.lever):after 
+{
+    border: 2px solid #0D47A1;  
+    background-color: #0D47A1;
 }

@@ -15,16 +15,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   </head>
   <body onload="initialize()">
     <h1 class="header"><%= title %></h1>
-    <p class="header">Select your options and enter your MDF from the options below. Left map is sample map, Right map is MDF map</p>
-    <div id="btnConstruct" class="header">
-      <button class="btn waves-effect waves-light blue darken-4" onclick="importMap()">Import Map</button>
-      <button class="btn waves-effect waves-light blue darken-4" onclick="exportMap()">Export Map</button>
-      <button class="btn waves-effect waves-light blue darken-4" id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
-    </div>
-    <p id="prompt" class="header">Enter MDF Strings below to validate</p>
+    <p class="header">Enter your MDF below and click the check mark to validate!</p>
+    <p id="prompt" class="header hide-elem">Obstacle Placement Mode Enabled. Click sample map to add/remove obstacles!</p>
     <div id="btnConstruct" class="header mdf-input-div">
       <div class="input-field col s6 mdf-input">
         <input id="mdf1" type="text" class="validate">
@@ -36,24 +33,43 @@
         <label for="mdf2">MDF String 2</label>
         <span class="helper-text" id="helper-mdf2" data-error="Invalid"></span>
       </div>
-      <button class="btn-large waves-effect waves-light green darken-2" id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
     </div>
 
-    <div id="result" class="header largetopgap no-result">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
+    <div id="result" class="header largetopgap hide-elem">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
 
     <div class="largetopgap">
       <table>
         <tbody>
           <tr>
             <td style="float: right;">
+              <span style="text-align: center;">Sample Map</span>&nbsp;&nbsp;&nbsp;
+              <span>
+                <label>
+                  <input type="checkbox" class="filled-in checkbox-blue" onclick="toggleObstacle()" />
+                  <span class="white-text">Enable Object Placement Mode</span>
+                </label>
+              </span>
+              <br>
               <div class="mdp-container" id="sampleArena"></div>
             </td>
             <td>
+              <span style="text-align: center;">Submitted MDF Map</span><br>
               <div class="mdp-container" id="submittedArena"></div>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <div class="fixed-action-btn click-to-toggle" style="bottom:24px; right:24px;">
+        <button class="btn-floating btn-large red" >
+          <i class="large material-icons">menu</i>
+        </button>
+        <ul>
+          <li><span>Import Map</span><button class="btn-floating btn-large blue darken-4" onclick="importMap()"><i class="material-icons">cloud_upload</i></button></li>
+          <li><span>Export Map</span><button class="btn-floating  btn-large blue darken-4" onclick="exportMap()"><i class="material-icons">cloud_download</i></button></li>
+          <li><span>Validate MDF</span><button class="btn-floating  btn-large green darken-4" onclick="validateMDF()"><i class="material-icons">check</i></button></li>
+        </ul>
+      </div>
       
     </div>
     
@@ -162,13 +178,8 @@
 
       function toggleObstacle() {
         obstacleMode = !obstacleMode;
-        if (obstacleMode) {
-          $("#btnObstacleSet").html("Disable Obstacle Placement Mode");
-          $("#prompt").text("Obstacle Mode Enabled, click map to set obstacle");
-        } else {
-          $("#btnObstacleSet").html("Enable Obstacle Placement Mode");
-          $("#prompt").text("Enter MDF strings below to validate");
-        }
+        if (obstacleMode) $("#prompt").removeClass("hide-elem");
+        else $("#prompt").addClass("hide-elem");
       }
 
       var mdfHex = /[0-9A-Fa-f]+/g;
@@ -217,7 +228,7 @@
         $("#resultC").text(correct);
         $("#resultI").text(incorrect);
         $("#resultU").text(unexplored);
-        $("#result").removeClass("no-result");
+        $("#result").removeClass("hide-elem");
       }
 
       function validateMDF() {
@@ -273,6 +284,11 @@
           alert(`Network Error`);
         };
       }
+
+      $(document).ready(function(){
+        $('.fixed-action-btn').floatingActionButton({ hoverEnabled: false });
+        $('.fixed-action-btn').floatingActionButton("open");
+      });
     </script>
   </body>
 </html>
