@@ -34,8 +34,8 @@ div.incorrect {
   font-size: unset;
 }
 
-#result {
-  visibility: hidden;
+#result.no-result {
+  display: none;
 }
 
 #resultScore {

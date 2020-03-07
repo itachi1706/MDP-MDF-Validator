@@ -20,9 +20,9 @@
     <h1 class="header"><%= title %></h1>
     <p class="header">Select your options and enter your MDF from the options below. Left map is sample map, Right map is MDF map</p>
     <div id="btnConstruct" class="header">
-      <button class="mdc-button" onclick="importMap()">Import Map</button>
-      <button onclick="exportMap()">Export Map</button>
-      <button id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
+      <button class="btn waves-effect waves-light blue darken-4" onclick="importMap()">Import Map</button>
+      <button class="btn waves-effect waves-light blue darken-4" onclick="exportMap()">Export Map</button>
+      <button class="btn waves-effect waves-light blue darken-4" id="btnObstacleSet" onclick="toggleObstacle()">Enable Obstacle Placement Mode</button>
     </div>
     <p id="prompt" class="header">Enter MDF Strings below to validate</p>
     <div id="btnConstruct" class="header mdf-input-div">
@@ -36,10 +36,10 @@
         <label for="mdf2">MDF String 2</label>
         <span class="helper-text" id="helper-mdf2" data-error="Invalid"></span>
       </div>
-      <button id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
+      <button class="btn-large waves-effect waves-light green darken-2" id="validate" class="tblong" onclick="validateMDF()">Validate MDF!</button>
     </div>
 
-    <div id="result" class="header">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
+    <div id="result" class="header largetopgap no-result">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
 
     <div class="largetopgap">
       <table>
@@ -217,7 +217,7 @@
         $("#resultC").text(correct);
         $("#resultI").text(incorrect);
         $("#resultU").text(unexplored);
-        $("#result").css("visibility", "visible");
+        $("#result").removeClass("no-result");
       }
 
       function validateMDF() {
