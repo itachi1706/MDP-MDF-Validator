@@ -65,10 +65,31 @@
           <i class="large material-icons">menu</i>
         </button>
         <ul>
+          <li><span>Load Pre-Defined Maps</span><a class="btn-floating btn-large waves-effect waves-light btn modal-trigger blue darken-4" href='#selModal'><i class="material-icons">map</i></a></li>
           <li><span>Import Map</span><button class="btn-floating btn-large blue darken-4" onclick="importMap()"><i class="material-icons">cloud_upload</i></button></li>
           <li><span>Export Map</span><button class="btn-floating  btn-large blue darken-4" onclick="exportMap()"><i class="material-icons">cloud_download</i></button></li>
           <li><span>Validate MDF</span><button class="btn-floating  btn-large green darken-4" onclick="validateMDF()"><i class="material-icons">check</i></button></li>
         </ul>
+      </div>
+
+        <!-- Modal Structure -->
+      <div id="selModal" class="modal bottom-sheet black">
+        <div class="modal-content">
+          <h3>Pre-Defined Maps</h3>
+          <h6 class="text-darken-4">Below contains the list of maps that have been used in prior leaderboard challenges</h6>
+          <h5>Academic Year 2019/2020 Semester 2</h5>
+          <p class="modal-close" onclick="loadSavedMaps('1920s2w8')">Week 8</p>
+          <p class="modal-close" onclick="loadSavedMaps('1920s2w9')">Week 9</p>
+          <p class="modal-close" onclick="loadSavedMaps('1920s2w10')">Week 10</p>
+          <h5>Academic Year 2019/2020 Semester 1</h5>
+          <p class="modal-close" onclick="loadSavedMaps('1920s1w8')">Week 8</p>
+          <p class="modal-close" onclick="loadSavedMaps('1920s1w9')">Week 9</p>
+          <p class="modal-close" onclick="loadSavedMaps('1920s1w10')">Week 10</p>
+          <p class="modal-close" onclick="loadSavedMaps('1920s1w11')">Week 11</p>
+        </div>
+        <div class="modal-footer black">
+          <a href="#!" class="modal-close waves-effect waves-green red white-text btn-flat">close</a>
+        </div>
       </div>
       
     </div>
@@ -112,6 +133,22 @@
 
       function importMap() {
         openFile(updateMap);
+      }
+
+      async function loadSavedMaps(map) {
+        console.log(map);
+        var filePath = `/maps/${map}.txt`;
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", filePath, true);
+        xmlhttp.send();
+        xmlhttp.onload = function() {
+          if (xmlhttp.status==200) {
+            var result = xmlhttp.responseText;
+            console.log("LOaded");
+            updateMap(result);
+          }
+          return result;
+        };
       }
 
       function exportMap() {
@@ -302,6 +339,7 @@
       $(document).ready(function(){
         $('.fixed-action-btn').floatingActionButton({ hoverEnabled: false });
         $('.fixed-action-btn').floatingActionButton("open");
+        $('.modal').modal();
       });
     </script>
     <script>
