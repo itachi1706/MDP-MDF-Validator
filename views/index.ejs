@@ -137,6 +137,7 @@
 
       async function loadSavedMaps(map) {
         console.log(map);
+        M.toast({html: 'Loading Map...', displayLength: 1000});
         var filePath = `/maps/${map}.txt`;
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", filePath, true);
