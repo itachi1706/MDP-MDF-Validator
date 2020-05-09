@@ -1,0 +1,86 @@
+extends layout
+
+block content
+  h1.header= title
+  p.header Enter your MDF below and click the check mark to validate!
+  p#prompt.header.hide-elem Obstacle Placement Mode Enabled. Click sample map to add/remove obstacles!
+  div#btnConstruct.header.mdf-input-div
+    div.input-field.col.s6.mdf-input
+      label(for='mdf1') MDF String 1
+      input#mdf1.validate(type='text')
+      span.helper-text#helper-mdf1(data-error="Invalid")
+    div.input-field.col.s12.mdf-input
+      label(for='mdf2') MDF String 2
+      input#mdf2.validate(type='text')
+      span.helper-text#helper-mdf2(data-error="Invalid")
+
+  div#result.header.largetogap.hide-elem Score:
+    span#resultScore 0
+    |  (
+    span#resultC 0
+    |  correct,
+    span#resultI 0
+    |  incorrect,
+    span#resultU 0
+    |  unexplored)
+
+  div.largetopgap
+    table
+      tbody
+        tr
+          td(style={float: 'right'})
+            span(style={'text-align': 'center'}) Sample Map
+            | &nbsp;&nbsp;&nbsp;
+            span
+              label
+                input.filled-in.checkbox-blue(type='checkbox', onclick='toggleObstacle()')
+                span.white-text Enable Object Placement Mode
+            br
+            div.mdp-container#sampleArena
+          td
+            span(style={'text-align': 'center'}) Submitted MDF Map
+            br
+            div.mdp-container#submittedArena
+
+    div.fixed-action-btn.click-to-toggle(style={bottom: '24px', right: '24px'})
+      button.btn-floating.btn-large.red
+        i.large.material-icons menu
+      ul
+        li
+          span Load Pre-Defined Maps
+          a.btn-floating.btn-large.waves-effect.waves-light.btn.modal-trigger.blue.darken-4(href='#selModal')
+            i.material-icons map
+        li
+          span Import Map
+          button.btn-floating.btn-large.blue.darken-4(onclick='importMap()')
+            i.material-icons cloud_upload
+        li
+          span Export Map
+          button.btn-floating.btn-large.blue.darken-4(onclick='exportMap()')
+            i.material-icons cloud_download
+        li
+          span Validate MDF
+          button.btn-floating.btn-large.green.darken-4(onclick='validateMDF()')
+            i.material-icons check
+
+    div#selModal.modal.bottom-sheet.black
+      div.modal-content
+        h3 Pre Defined Maps
+        h6.text-darken-4 Below contains the list of maps that have been used in prior leaderboard challenges
+        h5 Academic Year 2019/2020 Semester 2
+          p.modal-close(onclick="loadSavedMaps('1920s2w8')") Week 8
+          p.modal-close(onclick="loadSavedMaps('1920s2w9')") Week 9
+          p.modal-close(onclick="loadSavedMaps('1920s2w10')") Week 10
+        h5 Academic Year 2019/2020 Semester 1
+          p.modal-close(onclick="loadSavedMaps('1920s1w8')") Week 8
+          p.modal-close(onclick="loadSavedMaps('1920s1w9')") Week 9
+          p.modal-close(onclick="loadSavedMaps('1920s1w10')") Week 10
+          p.modal-close(onclick="loadSavedMaps('1920s1w11')") Week 11
+      div.modal-footer.black
+        a.modal-close.waves-effect.waves-green.red.white-text.btn-flat(href="#!") close
+
+  script.
+    function test() {
+      // How we interpolate substitute
+      console.log(#{title})
+    }

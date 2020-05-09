@@ -1,0 +1,337 @@
+<!DOCTYPE html><html><head><title></title><link rel="stylesheet" href="/stylesheets/style.css"><link href="https://fonts.googleapis.com/css?family=Google+Sans&amp;display=swap" rel="stylesheet"><script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script><link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"></head><body onload="initialize()"><h1></h1><h2></h2><pre></pre><script>obstacleMode = false;
+selectorGrid = new Array(300).fill(0);
+submittedGrid = new Array(300).fill(-1);
+
+function updateMap(contents) {
+  console.log(contents);
+  contents = contents.replace(/(?:\r\n|\r|\n)/g, '');
+  console.log(contents);
+  for (var i = 0; i < contents.length; i++) {
+    selectorGrid[i] = parseInt(contents.charAt(i));
+  }
+  drawSelectorGrid();
+}
+
+function openFile(func) {
+  readFile = function (e) {
+    var file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var contents = e.target.result;
+      fileInput.func(contents)
+      document.body.removeChild(fileInput)
+    }
+    reader.readAsText(file)
+  }
+  fileInput = document.createElement("input")
+  fileInput.type = 'file'
+  fileInput.style.display = 'none'
+  fileInput.onchange = readFile
+  fileInput.func = func
+  document.body.appendChild(fileInput)
+  fileInput.click();
+}
+
+function importMap() {
+  openFile(updateMap);
+}
+
+async function loadSavedMaps(map) {
+  console.log(map);
+  M.toast({html: 'Loading Map...', displayLength: 1000});
+  var filePath = `/maps/${map}.txt`;
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.open("GET", filePath, true);
+  xmlhttp.send();
+  xmlhttp.onload = function () {
+    if (xmlhttp.status == 200) {
+      var result = xmlhttp.responseText;
+      console.log("LOaded");
+      updateMap(result);
+    }
+    return result;
+  };
+}
+
+function exportMap() {
+  var textToSave = selectorGrid.toString().replace(/,/g, "").replace(/(.{15})/g, "$1\n");
+  var hiddenElement = document.createElement('a');
+  hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
+  hiddenElement.target = '_blank';
+  hiddenElement.download = 'sampleArena.txt';
+  hiddenElement.click();
+}
+
+function initialize() {
+  console.log("Initializing");
+  drawSelectorGrid();
+  drawSubmittedGrid();
+}
+
+function setGrid(i) {
+  if (!obstacleMode) return;
+  console.log("Selected:", i);
+  let cell = $(`#samplegrid-${i}`);
+  if (cell.hasClass("mdp-free")) {
+    selectorGrid[i] = 1;
+    cell.removeClass("mdp-free");
+    cell.addClass("mdp-obstacle");
+  } else if (cell.hasClass("mdp-obstacle")) {
+    selectorGrid[i] = 0;
+    cell.removeClass("mdp-obstacle");
+    cell.addClass("mdp-free")
+  } else console.log("NO CLASS FOUND");
+}
+
+function drawSelectorGrid() {
+  console.log("Generating Default Grid");
+  let table = $("#sampleArena");
+  table.html("");
+  selectorGrid.forEach((element, i) => {
+    switch (element) {
+      case 0:
+        table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`);
+        break;
+      case 1:
+        table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`);
+        break;
+    }
+  });
+}
+
+function drawSubmittedGrid() {
+  console.log("Generating Submission Grid");
+  console.log("Submission Grid Length:", submittedGrid.length);
+  let table = $("#submittedArena");
+  table.html("");
+  submittedGrid.forEach((element, i) => {
+    switch (element) {
+      case 0:
+        table.append(`<div id="sg-${i}" class="mdp-free"> </div>`);
+        break;
+      case -1:
+        table.append(`<div id="sg-${i}" class="mdp-unexplored"> </div>`);
+        break;
+      case 1:
+        table.append(`<div id="sg-${i}" class="mdp-obstacle"> /div>`);
+        break;
+    }
+  });
+}
+
+function process() {
+  console.log("lol " + obstacleMode);
+}
+
+function toggleObstacle() {
+  obstacleMode = !obstacleMode;
+  if (obstacleMode) $("#prompt").removeClass("hide-elem");
+  else $("#prompt").addClass("hide-elem");
+}
+
+var mdfHex = /[0-9A-Fa-f]+/g;
+
+function isHex(hex) {
+  try {
+    ans = BigInt("0x" + hex);
+  } catch (err) {
+    if (err.name == "SyntaxError") return false;
+    else {
+      console.log(err);
+      return false;
+    }
+  }
+  return true;
+}
+
+function calcScore() {
+  var correct = 0; // +1 score
+  var incorrect = 0; // -10 score
+  var unexplored = 0; // -2 score
+  submittedGrid.forEach(elem => {
+    if (elem == -1) unexplored++;
+  });
+  for (var i = 0; i < 300; i++) {
+    var s = submittedGrid[i];
+    var g = selectorGrid[i];
+    var o = $(`#sg-${i}`);
+    if (s == -1) continue;
+    if (s != g) {
+      incorrect++;
+      //o.html('<span class="incorrect">✗</span>');
+      o.addClass("incorrect");
+      o.text("✗");
+    } else {
+      correct++;
+      //o.html('<span class="correct">✓</span>');
+      o.addClass("correct");
+      o.text("✓");
+    }
+  }
+  var score = correct - (incorrect * 10) - (unexplored * 2);
+  // Update
+  $("#resultScore").text(score);
+  $("#resultC").text(correct);
+  $("#resultI").text(incorrect);
+  $("#resultU").text(unexplored);
+  $("#result").removeClass("hide-elem");
+}
+
+function validateMDF() {
+  console.log("Validating...")
+  var mdf1 = $("#mdf1").val();
+  var mdf2 = $("#mdf2").val();
+  $("#mdf1").removeClass("invalid");
+  $("#mdf2").removeClass("invalid");
+  console.log("MDF 1:", mdf1, " | MDF 2:", mdf2);
+  if (mdf1 === '') {
+    console.log("ERROR");
+    $("#mdf1").addClass("invalid");
+    $("#helper-mdf1").attr("data-error", "Exploration MDF String not found");
+    return;
+  } else if (mdf2 === '') {
+    console.log("ERROR");
+    $("#mdf2").addClass("invalid");
+    $("#helper-mdf2").attr("data-error", "Obstacle MDF String not found");
+    return;
+  }
+  // Check MDF Hex
+  if (!isHex(mdf1)) {
+    $("#mdf1").addClass("invalid");
+    $("#helper-mdf1").attr("data-error", "Invalid Hexadecimal String");
+    return;
+  } else if (!isHex(mdf2)) {
+    $("#mdf2").addClass("invalid");
+    $("#helper-mdf2").attr("data-error", "Invalid Hexadecimal String");
+    return;
+  } else console.log("Validation Successful, Checking");
+  M.toast({html: 'Validating MDF String...', displayLength: 2000});
+
+  let xhr = new XMLHttpRequest();
+  xhr.open('POST', '/submitMDF');
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send(`mdf1=${mdf1}&mdf2=${mdf2}`);
+  xhr.onload = function () {
+    console.log(`Loaded: ${xhr.status} ${xhr.response}`);
+    console.log(xhr.response);
+    console.log(typeof (xhr.response));
+    if (xhr.status == 200) {
+      console.log(submittedGrid.length);
+      submittedGrid = xhr.response.split(',').map(Number);
+      console.log(submittedGrid.length);
+      console.log(submittedGrid);
+      drawSubmittedGrid();
+      calcScore();
+    } else {
+      var gs = offlineMdfCalculation(mdf1, mdf2);
+      submittedGrid = gs.split(',').map(Number);
+      console.log(submittedGrid.length);
+      console.log(submittedGrid);
+      drawSubmittedGrid();
+      calcScore();
+    }
+  };
+  xhr.onerror = function () { // only triggers if the request couldn't be made at all
+    console.log(`Network error, going offline mode`);
+    var gs = offlineMdfCalculation(mdf1, mdf2);
+    submittedGrid = gs.split(',').map(Number);
+    console.log(submittedGrid.length);
+    console.log(submittedGrid);
+    drawSubmittedGrid();
+    calcScore();
+  };
+}
+
+$(document).ready(function () {
+  $('.fixed-action-btn').floatingActionButton({hoverEnabled: false});
+  $('.fixed-action-btn').floatingActionButton("open");
+  $('.modal').modal();
+});
+</script><script>function hex2bin(hex) {
+  return BigInt("0x" + hex).toString(2);
+}
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+
+function reverse2DArr(arr) {
+  var reversed = arr.map(function reverse(item) {
+    return Array.isArray(item) && Array.isArray(item[0]) ? item.map(reverse) : item.reverse();
+  });
+  return reversed;
+}
+
+const DEBUG = false;
+
+function printMapDbg(arr, override = false) {
+  if (!DEBUG && !override) return;
+  console.log("=======================================");
+  for (var i = 0; i < 15; i++) {
+    s = "";
+    for (var j = 0; j < 20; j++) {
+      s += arr[j][i].toString();
+    }
+    console.log(s);
+  }
+  console.log("=======================================");
+}
+
+function offlineMdfCalculation(mdf1, mdf2) {
+  console.log("Calculating MDF Offline");
+  console.log("MDF1:", mdf1, ", MDF2:", mdf2);
+  var m1 = hex2bin(mdf1);
+  m1 = m1.substring(2, 302);
+  console.log("Explored MDF:", m1);
+  var exploredLen = replaceAll(m1, "0", "").length;
+  var obstaclePad = exploredLen % 4;
+  console.log("Explored Length:", exploredLen, "| Obstacle Padding:", obstaclePad);
+  var m2s = mdf2;
+  console.log("Obstacle MDF Hex Len:", m2s.length);
+  var m2 = hex2bin(mdf2);
+  var mdfHexToBin = m2s.length * 4;
+  m2 = "0".repeat(mdfHexToBin - m2.length) + m2;
+  console.log("Obstacle MDF:", m2, "| Obstacle MDF Len:", m2.length);
+  console.log("Parsing Explored MDF");
+  const MAPCOL = 15;
+  const MAPROW = 20;
+  var j = 0;
+  var exploredMap = new Array(MAPROW).fill(0).map(() => new Array(MAPCOL).fill(0));
+  for (var i = 0; i < MAPROW; i++) {
+    for (var j = 0; j < MAPCOL; j++) {
+      var conv = parseInt(m1.charAt(i * MAPCOL + j));
+      exploredMap[j][i] = (conv == 0) ? -1 : 0;
+    }
+  }
+  printMapDbg(exploredMap);
+  console.log("Parsing Obstacle MDF");
+  var counter = 0;
+  for (var i = 0; i < MAPROW; i++) {
+    for (var j = 0; j < MAPCOL; j++) {
+      var str = m2.charAt(counter);
+      if (exploredMap[j][i] == 0) {
+        if (str == '1') {
+          exploredMap[j][i] = 1;
+        }
+        counter++;
+      }
+    }
+  }
+  printMapDbg(exploredMap);
+  // bottom up invert
+  console.log("Reversing Array to send back to client")
+  exploredMap = reverse2DArr(exploredMap);
+  printMapDbg(exploredMap, true);
+
+  console.log("Concatanting array into string. Len:", exploredMap.length * exploredMap[0].length);
+  var send = "";
+  for (var i = 0; i < MAPROW; i++) {
+    for (var j = 0; j < MAPCOL; j++) {
+      send += exploredMap[j][i] + ",";
+    }
+  }
+  return send.replace(/(^,)|(,$)/g, "");
+}</script></body></html>
