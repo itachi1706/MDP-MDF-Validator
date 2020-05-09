@@ -1,100 +1,17 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(href="https://fonts.googleapis.com/css?family=Google+Sans&display=swap" rel='stylesheet')
+    script(src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous")
+    link(rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css')
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js")
+    link(rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons')
+  body(onload="initialize()")
+    block content
 
-    <!-- Google Product Sans -->
-    <link href="https://fonts.googleapis.com/css?family=Google+Sans&display=swap" rel="stylesheet">
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
-    
-    <!-- Material Design -->
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <!-- Material Icons -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  </head>
-  <body onload="initialize()">
-    <h1 class="header"><%= title %></h1>
-    <p class="header">Enter your MDF below and click the check mark to validate!</p>
-    <p id="prompt" class="header hide-elem">Obstacle Placement Mode Enabled. Click sample map to add/remove obstacles!</p>
-    <div id="btnConstruct" class="header mdf-input-div">
-      <div class="input-field col s6 mdf-input">
-        <input id="mdf1" type="text" class="validate">
-        <label for="mdf1">MDF String 1</label>
-        <span class="helper-text" id="helper-mdf1" data-error="Invalid"></span>
-      </div>
-      <div class="input-field col s12 mdf-input">
-        <input id="mdf2" type="text" class="validate">
-        <label for="mdf2">MDF String 2</label>
-        <span class="helper-text" id="helper-mdf2" data-error="Invalid"></span>
-      </div>
-    </div>
-
-    <div id="result" class="header largetopgap hide-elem">Score: <span id="resultScore">0</span> (<span id="resultC">0</span> correct, <span id="resultI">0</span> incorrect, <span id="resultU">0</span> unexplored)</div>
-
-    <div class="largetopgap">
-      <table>
-        <tbody>
-          <tr>
-            <td style="float: right;">
-              <span style="text-align: center;">Sample Map</span>&nbsp;&nbsp;&nbsp;
-              <span>
-                <label>
-                  <input type="checkbox" class="filled-in checkbox-blue" onclick="toggleObstacle()" />
-                  <span class="white-text">Enable Object Placement Mode</span>
-                </label>
-              </span>
-              <br>
-              <div class="mdp-container" id="sampleArena"></div>
-            </td>
-            <td>
-              <span style="text-align: center;">Submitted MDF Map</span><br>
-              <div class="mdp-container" id="submittedArena"></div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="fixed-action-btn click-to-toggle" style="bottom:24px; right:24px;">
-        <button class="btn-floating btn-large red" >
-          <i class="large material-icons">menu</i>
-        </button>
-        <ul>
-          <li><span>Load Pre-Defined Maps</span><a class="btn-floating btn-large waves-effect waves-light btn modal-trigger blue darken-4" href='#selModal'><i class="material-icons">map</i></a></li>
-          <li><span>Import Map</span><button class="btn-floating btn-large blue darken-4" onclick="importMap()"><i class="material-icons">cloud_upload</i></button></li>
-          <li><span>Export Map</span><button class="btn-floating  btn-large blue darken-4" onclick="exportMap()"><i class="material-icons">cloud_download</i></button></li>
-          <li><span>Validate MDF</span><button class="btn-floating  btn-large green darken-4" onclick="validateMDF()"><i class="material-icons">check</i></button></li>
-        </ul>
-      </div>
-
-        <!-- Modal Structure -->
-      <div id="selModal" class="modal bottom-sheet black">
-        <div class="modal-content">
-          <h3>Pre-Defined Maps</h3>
-          <h6 class="text-darken-4">Below contains the list of maps that have been used in prior leaderboard challenges</h6>
-          <h5>Academic Year 2019/2020 Semester 2</h5>
-          <p class="modal-close" onclick="loadSavedMaps('1920s2w8')">Week 8</p>
-          <p class="modal-close" onclick="loadSavedMaps('1920s2w9')">Week 9</p>
-          <p class="modal-close" onclick="loadSavedMaps('1920s2w10')">Week 10</p>
-          <h5>Academic Year 2019/2020 Semester 1</h5>
-          <p class="modal-close" onclick="loadSavedMaps('1920s1w8')">Week 8</p>
-          <p class="modal-close" onclick="loadSavedMaps('1920s1w9')">Week 9</p>
-          <p class="modal-close" onclick="loadSavedMaps('1920s1w10')">Week 10</p>
-          <p class="modal-close" onclick="loadSavedMaps('1920s1w11')">Week 11</p>
-        </div>
-        <div class="modal-footer black">
-          <a href="#!" class="modal-close waves-effect waves-green red white-text btn-flat">close</a>
-        </div>
-      </div>
-      
-    </div>
-    
-    <script>
+    script.
       obstacleMode = false;
       selectorGrid = new Array(300).fill(0);
       submittedGrid = new Array(300).fill(-1);
@@ -108,14 +25,15 @@
         }
         drawSelectorGrid();
       }
+
       function openFile(func) {
-        readFile = function(e) {
+        readFile = function (e) {
           var file = e.target.files[0];
           if (!file) {
             return;
           }
           var reader = new FileReader();
-          reader.onload = function(e) {
+          reader.onload = function (e) {
             var contents = e.target.result;
             fileInput.func(contents)
             document.body.removeChild(fileInput)
@@ -123,10 +41,10 @@
           reader.readAsText(file)
         }
         fileInput = document.createElement("input")
-        fileInput.type='file'
-        fileInput.style.display='none'
-        fileInput.onchange=readFile
-        fileInput.func=func
+        fileInput.type = 'file'
+        fileInput.style.display = 'none'
+        fileInput.onchange = readFile
+        fileInput.func = func
         document.body.appendChild(fileInput)
         fileInput.click();
       }
@@ -142,8 +60,8 @@
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("GET", filePath, true);
         xmlhttp.send();
-        xmlhttp.onload = function() {
-          if (xmlhttp.status==200) {
+        xmlhttp.onload = function () {
+          if (xmlhttp.status == 200) {
             var result = xmlhttp.responseText;
             console.log("LOaded");
             updateMap(result);
@@ -153,10 +71,8 @@
       }
 
       function exportMap() {
-        var textToSave = selectorGrid.toString().replace(/,/g, "").replace(/(.{15})/g,"$1\n");
-
+        var textToSave = selectorGrid.toString().replace(/,/g, "").replace(/(.{15})/g, "$1\n");
         var hiddenElement = document.createElement('a');
-
         hiddenElement.href = 'data:attachment/text,' + encodeURI(textToSave);
         hiddenElement.target = '_blank';
         hiddenElement.download = 'sampleArena.txt';
@@ -190,8 +106,12 @@
         table.html("");
         selectorGrid.forEach((element, i) => {
           switch (element) {
-            case 0: table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`); break;
-            case 1: table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`); break;
+            case 0:
+              table.append(`<div class="mdp-free" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`);
+              break;
+            case 1:
+              table.append(`<div class="mdp-obstacle" id="samplegrid-${i}" onclick="setGrid(${i})"> </div>`);
+              break;
           }
         });
       }
@@ -203,9 +123,15 @@
         table.html("");
         submittedGrid.forEach((element, i) => {
           switch (element) {
-            case 0: table.append(`<div id="sg-${i}" class="mdp-free"> </div>`); break;
-            case -1: table.append(`<div id="sg-${i}" class="mdp-unexplored"> </div>`); break;
-            case 1: table.append(`<div id="sg-${i}" class="mdp-obstacle"> /div>`); break;
+            case 0:
+              table.append(`<div id="sg-${i}" class="mdp-free"> </div>`);
+              break;
+            case -1:
+              table.append(`<div id="sg-${i}" class="mdp-unexplored"> </div>`);
+              break;
+            case 1:
+              table.append(`<div id="sg-${i}" class="mdp-obstacle"> /div>`);
+              break;
           }
         });
       }
@@ -222,7 +148,7 @@
 
       var mdfHex = /[0-9A-Fa-f]+/g;
 
-      function isHex(hex){
+      function isHex(hex) {
         try {
           ans = BigInt("0x" + hex);
         } catch (err) {
@@ -252,8 +178,7 @@
             //o.html('<span class="incorrect">✗</span>');
             o.addClass("incorrect");
             o.text("✗");
-          }
-          else {
+          } else {
             correct++;
             //o.html('<span class="correct">✓</span>');
             o.addClass("correct");
@@ -288,27 +213,25 @@
           return;
         }
         // Check MDF Hex
-        if (!isHex(mdf1)) { 
+        if (!isHex(mdf1)) {
           $("#mdf1").addClass("invalid");
           $("#helper-mdf1").attr("data-error", "Invalid Hexadecimal String");
-          return; 
-        } 
-        else if (!isHex(mdf2)) { 
+          return;
+        } else if (!isHex(mdf2)) {
           $("#mdf2").addClass("invalid");
           $("#helper-mdf2").attr("data-error", "Invalid Hexadecimal String");
-          return; 
-        } 
-        else console.log("Validation Successful, Checking");
+          return;
+        } else console.log("Validation Successful, Checking");
         M.toast({html: 'Validating MDF String...', displayLength: 2000});
-        
+
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/submitMDF');
         xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhr.send(`mdf1=${mdf1}&mdf2=${mdf2}`);
-        xhr.onload = function() {
+        xhr.onload = function () {
           console.log(`Loaded: ${xhr.status} ${xhr.response}`);
           console.log(xhr.response);
-          console.log(typeof(xhr.response));
+          console.log(typeof (xhr.response));
           if (xhr.status == 200) {
             console.log(submittedGrid.length);
             submittedGrid = xhr.response.split(',').map(Number);
@@ -325,8 +248,7 @@
             calcScore();
           }
         };
-
-        xhr.onerror = function() { // only triggers if the request couldn't be made at all
+        xhr.onerror = function () { // only triggers if the request couldn't be made at all
           console.log(`Network error, going offline mode`);
           var gs = offlineMdfCalculation(mdf1, mdf2);
           submittedGrid = gs.split(',').map(Number);
@@ -337,14 +259,14 @@
         };
       }
 
-      $(document).ready(function(){
-        $('.fixed-action-btn').floatingActionButton({ hoverEnabled: false });
+      $(document).ready(function () {
+        $('.fixed-action-btn').floatingActionButton({hoverEnabled: false});
         $('.fixed-action-btn').floatingActionButton("open");
         $('.modal').modal();
       });
-    </script>
-    <script>
-      function hex2bin(hex){
+
+    script.
+      function hex2bin(hex) {
         return BigInt("0x" + hex).toString(2);
       }
 
@@ -353,11 +275,14 @@
       }
 
       function reverse2DArr(arr) {
-        var reversed = arr.map(function reverse(item) { return Array.isArray(item) && Array.isArray(item[0]) ? item.map(reverse) : item.reverse(); });
+        var reversed = arr.map(function reverse(item) {
+          return Array.isArray(item) && Array.isArray(item[0]) ? item.map(reverse) : item.reverse();
+        });
         return reversed;
       }
 
       const DEBUG = false;
+
       function printMapDbg(arr, override = false) {
         if (!DEBUG && !override) return;
         console.log("=======================================");
@@ -377,18 +302,15 @@
         var m1 = hex2bin(mdf1);
         m1 = m1.substring(2, 302);
         console.log("Explored MDF:", m1);
-
         var exploredLen = replaceAll(m1, "0", "").length;
         var obstaclePad = exploredLen % 4;
         console.log("Explored Length:", exploredLen, "| Obstacle Padding:", obstaclePad);
-
         var m2s = mdf2;
         console.log("Obstacle MDF Hex Len:", m2s.length);
         var m2 = hex2bin(mdf2);
         var mdfHexToBin = m2s.length * 4;
         m2 = "0".repeat(mdfHexToBin - m2.length) + m2;
         console.log("Obstacle MDF:", m2, "| Obstacle MDF Len:", m2.length);
-
         console.log("Parsing Explored MDF");
         const MAPCOL = 15;
         const MAPROW = 20;
@@ -401,7 +323,6 @@
           }
         }
         printMapDbg(exploredMap);
-
         console.log("Parsing Obstacle MDF");
         var counter = 0;
         for (var i = 0; i < MAPROW; i++) {
@@ -416,12 +337,11 @@
           }
         }
         printMapDbg(exploredMap);
-
         // bottom up invert
         console.log("Reversing Array to send back to client")
         exploredMap = reverse2DArr(exploredMap);
         printMapDbg(exploredMap, true);
-        
+
         console.log("Concatanting array into string. Len:", exploredMap.length * exploredMap[0].length);
         var send = "";
         for (var i = 0; i < MAPROW; i++) {
@@ -431,6 +351,3 @@
         }
         return send.replace(/(^,)|(,$)/g, "");
       }
-    </script>
-  </body>
-</html>
