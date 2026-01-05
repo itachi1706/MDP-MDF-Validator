@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: scse-mdp-validator-svc
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  selector:
+    app: mdp-validator
+  type: ClusterIP
+  internalTrafficPolicy: Cluster

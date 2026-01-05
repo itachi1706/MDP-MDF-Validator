@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scse-mdp-validator
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - scse-mdp-validator.doksk8s.itachi1706.com
+      secretName: scse-mdp-validator-tls
+  rules:
+    - host: scse-mdp-validator.doksk8s.itachi1706.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: scse-mdp-validator-svc
+                port:
+                  number: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: scse-mdp-validator-prd
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - mdpvalidator.itachi1706.com
+      secretName: scse-mdp-validator-prd-tls
+  rules:
+    - host: mdpvalidator.itachi1706.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: scse-mdp-validator-svc
+                port:
+                  number: 80

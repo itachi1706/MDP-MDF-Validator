@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scse-mdp-validator
+  labels:
+    app: mdp-validator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mdp-validator
+  template:
+    metadata:
+      labels:
+        app: mdp-validator
+    spec:
+      containers:
+        - name: mdp-validator
+          image: itachi1706/personal-docker-images:scse-mdp-validator
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          resources:
+            requests:
+              memory: 40Mi
+          imagePullPolicy: Always
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: dockerhub-creds
