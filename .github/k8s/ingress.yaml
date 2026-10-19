@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/managed-by: "argo"
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-production
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+    external-dns.kubernetes.io/cloudflare-proxied: 'true'
 spec:
   ingressClassName: nginx
   tls:

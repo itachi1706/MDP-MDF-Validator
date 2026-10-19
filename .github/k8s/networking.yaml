@@ -11,7 +11,7 @@ metadata:
     app.kubernetes.io/managed-by: "argo"
   annotations:
     link.argocd.argoproj.io/external-link: https://scse-mdp-validator.itachi1706.dev
-    external-dns.alpha.kubernetes.io/cloudflare-proxied: 'true'
+    external-dns.kubernetes.io/cloudflare-proxied: 'true'
 spec:
   parentRefs:
     - name: main-cf-gateway
