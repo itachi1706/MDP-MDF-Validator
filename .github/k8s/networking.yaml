@@ -26,3 +26,72 @@ spec:
       backendRefs:
         - name: scse-mdp-validator-svc
           port: 80
+---
+# External
+apiVersion: gateway.networking.k8s.io/v1
+kind: ListenerSet
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+    external-dns.kubernetes.io/cloudflare-proxied: 'true'
+  labels:
+    app.kubernetes.io/name: "mdp-validator"
+    app.kubernetes.io/instance: "mdp-validator-prod"
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: "listenerset"
+    app.kubernetes.io/part-of: "mdp-validator"
+    app.kubernetes.io/managed-by: "argo"
+  name: scse-mdp-validator-https-listener
+spec:
+  listeners:
+    - allowedRoutes:
+        namespaces:
+          from: Same
+      hostname: mdpvalidator.itachi1706.com
+      name: scse-mdp-validator-https
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - group: ''
+            kind: Secret
+            name: scse-mdp-validator-prd-tls
+        mode: Terminate
+  parentRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: cilium-gateway
+    namespace: kube-networking
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    external-dns.kubernetes.io/cloudflare-proxied: 'true'
+  labels:
+    app.kubernetes.io/name: "mdp-validator"
+    app.kubernetes.io/instance: "mdp-validator-prod"
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/component: "http-route-external"
+    app.kubernetes.io/part-of: "mdp-validator"
+    app.kubernetes.io/managed-by: "argo"
+  name: scse-mdp-validator-ext-route
+spec:
+  hostnames:
+    - mdpvalidator.itachi1706.com
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: ListenerSet
+      name: scse-mdp-validator-https-listener
+      sectionName: scse-mdp-validator-https
+  rules:
+    - backendRefs:
+        - group: ''
+          kind: Service
+          name: scse-mdp-validator-svc
+          port: 80
+          weight: 1
+      matches:
+        - path:
+            type: PathPrefix
+            value: /
